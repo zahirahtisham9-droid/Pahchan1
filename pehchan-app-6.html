@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="ur" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>پہچان — ہنرمند تلاش کریں</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;600;700&family=Noto+Sans+Arabic:wght@400;600&family=Cinzel:wght@600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#07090c;--c1:#0d1117;--c2:#161b22;--c3:#21262d;--c4:#30363d;
+  --teal:#0ea5e9;--teal2:#38bdf8;--tb:rgba(14,165,233,.12);
+  --gold:#d4a848;--gold2:#f0c060;
+  --gr:#22c55e;--grb:rgba(34,197,94,.12);
+  --rd:#ef4444;
+  --t1:#f0f6fc;--t2:#8b949e;--t3:#484f58;
+  --bdr:rgba(48,54,61,.8);--bdr2:rgba(14,165,233,.3);
+  --r:12px;--r2:9px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{width:100%;height:100%;font-family:"Noto Sans Arabic",sans-serif;background:var(--bg);color:var(--t1);direction:rtl;overflow:hidden;}
+#sp{position:fixed;inset:0;z-index:99;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;}
+.sp-ring{width:72px;height:72px;border-radius:50%;border:3px solid var(--c3);border-top-color:var(--teal);border-right-color:var(--gold);animation:spin 1s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.sp-t{font-family:"Cinzel",serif;font-size:1.6rem;font-weight:600;background:linear-gradient(135deg,var(--teal2),var(--gold2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:3px;}
+.sp-u{font-family:"Noto Nastaliq Urdu",serif;font-size:.9rem;color:var(--t3);}
+#tb{position:fixed;top:0;left:0;right:0;height:46px;z-index:40;background:rgba(7,9,12,.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--bdr);display:none;align-items:center;padding:0 12px;gap:8px;}
+#tb.on{display:flex;}
+.tb-brand{font-family:"Cinzel",serif;font-size:.82rem;font-weight:600;background:linear-gradient(135deg,var(--teal2),var(--gold2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:1px;}
+.tb-r{margin-left:auto;display:flex;gap:5px;align-items:center;}
+.ib{width:32px;height:32px;background:var(--c2);border:1px solid var(--bdr);border-radius:8px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:.85rem;color:var(--t2);}
+.login-btn{font-size:.65rem;width:auto;padding:0 10px;color:var(--teal2);border-color:var(--bdr2);}
+#app{position:fixed;top:46px;left:0;right:0;bottom:0;display:none;flex-direction:column;}
+#app.on{display:flex;}
+#nav{display:flex;background:var(--c1);border-bottom:1px solid var(--bdr);flex-shrink:0;}
+.nt{flex:1;padding:9px 4px;text-align:center;font-size:.62rem;cursor:pointer;color:var(--t3);border-bottom:2px solid transparent;transition:all .14s;}
+.nt.on{color:var(--teal2);border-bottom-color:var(--teal);}
+.nt-i{font-size:.85rem;display:block;margin-bottom:1px;}
+.scr{display:none;flex:1;overflow:hidden;flex-direction:column;}
+.scr.on{display:flex;}
+.srch{padding:8px 10px;flex-shrink:0;}
+.si{position:relative;}
+#sq{width:100%;background:var(--c2);border:1.5px solid var(--bdr);border-radius:20px;padding:8px 34px 8px 12px;font-family:"Noto Nastaliq Urdu",serif;font-size:.84rem;color:var(--t1);direction:rtl;outline:none;}
+#sq::placeholder{color:var(--t3);}
+.si-ico{position:absolute;right:11px;top:50%;transform:translateY(-50%);font-size:.85rem;color:var(--t3);pointer-events:none;}
+.cats{padding:0 10px 6px;overflow-x:auto;display:flex;gap:5px;flex-shrink:0;}
+.cats::-webkit-scrollbar{display:none;}
+.cc{background:var(--c2);border:1px solid var(--bdr);border-radius:14px;padding:4px 11px;font-size:.65rem;color:var(--t2);cursor:pointer;white-space:nowrap;transition:all .13s;flex-shrink:0;}
+.cc.on{background:var(--tb);border-color:var(--teal);color:var(--teal2);}
+#wl{flex:1;overflow-y:auto;padding:6px 10px 70px;display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.wc{background:var(--c1);border:1.5px solid var(--bdr);border-radius:var(--r);overflow:hidden;cursor:pointer;transition:border-color .14s,transform .14s;animation:fi .18s ease both;}
+@keyframes fi{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+.wc:hover{border-color:var(--teal);transform:translateY(-1px);}
+.wc-t{padding:10px 8px 7px;text-align:center;}
+.wc-av{width:52px;height:52px;border-radius:50%;margin:0 auto 7px;border:2px solid var(--bdr2);overflow:hidden;background:var(--c3);display:flex;align-items:center;justify-content:center;font-size:1.4rem;}
+.wc-nm{font-family:"Noto Nastaliq Urdu",serif;font-size:.82rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.wc-cat{font-size:.6rem;color:var(--teal2);margin-top:2px;}
+.wc-stars{display:flex;justify-content:center;gap:1px;margin-top:3px;}
+.st{font-size:.6rem;}.st.on{color:var(--gold2);}.st.off{color:var(--c4);}
+.wc-b{background:var(--c2);padding:6px 8px;display:flex;justify-content:space-between;align-items:center;}
+.wc-r{font-size:.72rem;color:var(--gold2);font-weight:600;}
+.wc-city{font-size:.58rem;color:var(--t3);}
+#s-prof{overflow-y:auto;padding:10px 10px 70px;}
+.ph{background:var(--c1);border:1.5px solid var(--bdr);border-radius:var(--r);padding:18px;margin-bottom:10px;text-align:center;}
+.ph-nm{font-family:"Noto Nastaliq Urdu",serif;font-size:1rem;font-weight:700;margin-bottom:3px;}
+.sc{background:var(--c1);border:1px solid var(--bdr);border-radius:var(--r);padding:12px;margin-bottom:8px;}
+.sc-h{font-family:"Noto Nastaliq Urdu",serif;font-size:.86rem;color:var(--teal2);margin-bottom:9px;}
+#auth{position:fixed;inset:0;z-index:90;background:rgba(0,0,0,.85);backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;padding:18px;}
+#auth.on{display:flex;}
+.ac{background:var(--c1);border:1.5px solid var(--bdr2);border-radius:16px;padding:26px 20px;max-width:320px;width:100%;text-align:center;animation:pop .25s cubic-bezier(.34,1.56,.64,1);}
+@keyframes pop{from{opacity:0;transform:scale(.88);}to{opacity:1;transform:scale(1);}}
+.ac-ico{font-size:2.2rem;margin-bottom:8px;}
+.ac-t{font-family:"Cinzel",serif;font-size:1.2rem;font-weight:600;background:linear-gradient(135deg,var(--teal2),var(--gold2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:2px;margin-bottom:3px;}
+.ac-u{font-family:"Noto Nastaliq Urdu",serif;font-size:.85rem;color:var(--t2);margin-bottom:5px;}
+.ac-sub{font-size:.7rem;color:var(--t3);margin-bottom:18px;font-family:"Noto Nastaliq Urdu",serif;line-height:1.8;}
+.gb{width:100%;padding:11px;background:#fff;border:1.5px solid #dadce0;border-radius:9px;display:flex;align-items:center;justify-content:center;gap:9px;cursor:pointer;font-family:"Noto Nastaliq Urdu",serif;font-size:.86rem;font-weight:600;color:#3c4043;transition:all .16s;margin-bottom:8px;}
+.sk{font-size:.68rem;color:var(--t3);cursor:pointer;padding:6px;display:block;}
+.bs{position:fixed;inset:0;z-index:80;display:flex;align-items:flex-end;justify-content:center;background:rgba(0,0,0,.7);backdrop-filter:blur(5px);opacity:0;pointer-events:none;transition:opacity .2s;}
+.bs.on{opacity:1;pointer-events:all;}
+.bsp{background:var(--c1);border-radius:18px 18px 0 0;border-top:1.5px solid var(--bdr2);width:100%;max-width:520px;max-height:92vh;overflow-y:auto;padding:16px 14px 28px;transform:translateY(100%);transition:transform .28s cubic-bezier(.16,1,.3,1);}
+.bs.on .bsp{transform:translateY(0);}
+.bsh{width:34px;height:3px;background:var(--c4);border-radius:2px;margin:0 auto 14px;}
+.bs-t{font-family:"Noto Nastaliq Urdu",serif;font-size:.95rem;background:linear-gradient(135deg,var(--teal2),var(--gold2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-align:center;margin-bottom:13px;}
+.lbl{font-family:"Noto Nastaliq Urdu",serif;font-size:.76rem;color:var(--teal2);display:block;margin-bottom:3px;}
+.inp{width:100%;background:var(--c2);border:1.5px solid var(--bdr);border-radius:var(--r2);padding:8px 10px;font-family:"Noto Nastaliq Urdu",serif;font-size:.83rem;color:var(--t1);direction:rtl;outline:none;}
+.inp::placeholder{color:var(--t3);}
+.inp-ltr{direction:ltr;text-align:left;font-family:"Noto Sans Arabic",sans-serif;}
+select.inp option{background:var(--c2);}
+.fld{margin-bottom:9px;}
+.r2{display:grid;grid-template-columns:1fr 1fr;gap:7px;}
+.btn{font-family:"Noto Sans Arabic",sans-serif;font-size:.73rem;padding:7px 12px;border-radius:7px;border:none;cursor:pointer;transition:all .14s;display:inline-flex;align-items:center;gap:4px;font-weight:500;white-space:nowrap;}
+.bt{background:linear-gradient(135deg,#0369a1,var(--teal));color:#fff;font-weight:700;}
+.bg{background:linear-gradient(135deg,#15803d,var(--gr));color:#fff;}
+.br2{background:#991b1b;color:#fff;}
+.bo{background:var(--c2);color:var(--t2);border:1px solid var(--bdr);}
+.row{display:flex;gap:5px;flex-wrap:wrap;margin-top:8px;}
+.pu{display:flex;flex-direction:column;align-items:center;gap:6px;margin-bottom:10px;}
+.pu-p{width:64px;height:64px;border-radius:50%;border:2px dashed var(--bdr2);background:var(--c2);display:flex;align-items:center;justify-content:center;font-size:1.5rem;cursor:pointer;overflow:hidden;}
+.pu-p img{width:100%;height:100%;object-fit:cover;}
+.wd-hd{text-align:center;padding-bottom:12px;margin-bottom:12px;border-bottom:1px solid var(--bdr);}
+.wd-av{width:74px;height:74px;border-radius:50%;margin:0 auto 9px;border:2.5px solid var(--bdr2);overflow:hidden;background:var(--c3);display:flex;align-items:center;justify-content:center;font-size:2rem;}
+.wd-nm{font-family:"Noto Nastaliq Urdu",serif;font-size:1rem;font-weight:700;margin-bottom:3px;}
+.wi{display:flex;gap:6px;padding:7px 0;border-bottom:1px solid var(--c2);}
+.wi:last-of-type{border:none;}
+.wi-k{font-size:.62rem;color:var(--t3);min-width:64px;}
+.wi-v{font-family:"Noto Nastaliq Urdu",serif;font-size:.82rem;flex:1;}
+.toast{position:fixed;bottom:14px;left:50%;transform:translateX(-50%);background:var(--c2);color:var(--t1);padding:8px 16px;border-radius:20px;font-size:.73rem;z-index:9999;box-shadow:0 4px 20px rgba(0,0,0,.5);border:1px solid var(--bdr);display:flex;align-items:center;gap:5px;pointer-events:none;max-width:90vw;}
+.empty{text-align:center;padding:32px 12px;color:var(--t3);}
+.ei{font-size:2rem;margin-bottom:8px;}
+.ep{font-family:"Noto Nastaliq Urdu",serif;font-size:.82rem;line-height:1.8;}
+::-webkit-scrollbar{width:3px;}
+::-webkit-scrollbar-thumb{background:var(--c4);border-radius:2px;}
+</style>
+</head>
+<body>
+
+<div id="sp">
+  <div class="sp-ring"></div>
+  <div class="sp-t">PEHCHAN</div>
+  <div class="sp-u">ہنرمند تلاش کریں</div>
+</div>
+
+<div id="tb">
+  <span style="font-size:1.1rem">👥</span>
+  <span class="tb-brand">PEHCHAN</span>
+  <div class="tb-r">
+    <button class="ib login-btn" onclick="showAuth()">🔑 لاگ ان</button>
+  </div>
+</div>
+
+<div id="app">
+  <div id="nav">
+    <div class="nt on" onclick="go(0)"><span class="nt-i">🔍</span>تلاش</div>
+    <div class="nt" onclick="go(1)"><span class="nt-i">👤</span>پروفائل</div>
+    <div class="nt" onclick="go(2)"><span class="nt-i">📲</span>رابطے</div>
+  </div>
+
+  <div class="scr on" id="s-browse">
+    <div style="margin:8px 10px 0;background:linear-gradient(135deg,rgba(14,165,233,.1),rgba(34,197,94,.08));border:1px solid rgba(14,165,233,.25);border-radius:10px;padding:9px 12px;display:flex;align-items:center;gap:8px;flex-shrink:0">
+      <span style="font-size:1.2rem">🔍</span>
+      <div>
+        <div style="font-family:'Noto Nastaliq Urdu',serif;font-size:.8rem;font-weight:600">ہنرمند تلاش کریں</div>
+        <div style="font-size:.62rem;color:var(--t3);margin-top:2px">زمرہ چنیں — پروفائل دیکھیں — WhatsApp کریں</div>
+      </div>
+    </div>
+    <div class="srch" style="padding-top:8px">
+      <div class="si">
+        <span class="si-ico">🔍</span>
+        <input id="sq" placeholder="الیکٹریشن، لاہور..." oninput="doSearch()">
+      </div>
+    </div>
+    <div class="cats" id="cats-row"></div>
+    <div id="wl"></div>
+  </div>
+
+  <div class="scr" id="s-prof" style="overflow-y:auto;padding:10px 10px 70px">
+    <div id="prof-content">
+      <div class="empty"><div class="ei">🔑</div><div class="ep">پروفائل کے لیے لاگ ان کریں</div></div>
+    </div>
+  </div>
+
+  <div class="scr" id="s-ord" style="overflow-y:auto;padding:10px 10px 70px">
+    <div id="ord-content">
+      <div class="empty"><div class="ei">📲</div><div class="ep">ابھی کوئی رابطہ نہیں</div></div>
+    </div>
+  </div>
+</div>
+
+<div id="auth">
+  <div class="ac">
+    <div class="ac-ico">👥</div>
+    <div class="ac-t">PEHCHAN</div>
+    <div class="ac-u">پہچان</div>
+    <div class="ac-sub">رابطہ کرنے کے لیے لاگ ان کریں</div>
+    <button class="gb" onclick="demoLogin()">
+      <svg width="18" height="18" viewBox="0 0 24 24">
+        <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+        <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+        <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+        <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+      </svg>
+      Demo لاگ ان (Firebase بند)
+    </button>
+    <span class="sk" onclick="closeAuth()">ابھی نہیں</span>
+  </div>
+</div>
+
+<div class="bs" id="bs-reg">
+  <div class="bsp">
+    <div class="bsh"></div>
+    <div class="bs-t" id="reg-title">ہنرمند رجسٹریشن</div>
+    <div class="pu">
+      <div class="pu-p" id="pp" onclick="document.getElementById('pi').click()">📷</div>
+      <input type="file" id="pi" accept="image/*" style="display:none" onchange="prevPic(this)">
+      <div style="font-size:.62rem;color:var(--t3)">تصویر (اختیاری)</div>
+    </div>
+    <div class="fld"><label class="lbl">مکمل نام *</label><input class="inp" id="r-name" placeholder="Muhammad Ali"></div>
+    <div class="r2">
+      <div class="fld"><label class="lbl">WhatsApp *</label><input class="inp inp-ltr" id="r-wa" placeholder="03XX-XXXXXXX" type="tel"></div>
+      <div class="fld"><label class="lbl">شہر *</label><input class="inp" id="r-city" placeholder="لاہور"></div>
+    </div>
+    <div class="fld"><label class="lbl">زمرہ *</label><select class="inp" id="r-cat"><option value="">منتخب کریں</option></select></div>
+    <div class="fld"><label class="lbl">مہارت کا عنوان *</label><input class="inp" id="r-title" placeholder="تجربہ کار الیکٹریشن"></div>
+    <div class="r2">
+      <div class="fld"><label class="lbl">تجربہ (سال)</label><input class="inp inp-ltr" id="r-exp" placeholder="5" type="number"></div>
+      <div class="fld"><label class="lbl">ریٹ (Rs.) *</label><input class="inp inp-ltr" id="r-rate" placeholder="500" type="number"></div>
+    </div>
+    <div class="fld"><label class="lbl">فی</label>
+      <select class="inp" id="r-rtype">
+        <option value="گھنٹہ">فی گھنٹہ</option>
+        <option value="دن">فی دن</option>
+        <option value="کام">فی کام</option>
+      </select>
+    </div>
+    <div class="fld"><label class="lbl">اپنے بارے میں</label><textarea class="inp" id="r-bio" rows="2" placeholder="تجربہ اور خدمات..."></textarea></div>
+    <div class="row">
+      <button class="btn bt" onclick="saveReg()" style="flex:1;justify-content:center;font-family:'Noto Nastaliq Urdu',serif;font-size:.86rem">💾 محفوظ</button>
+      <button class="btn bo" onclick="closeBS('bs-reg')">✕</button>
+    </div>
+  </div>
+</div>
+
+<div class="bs" id="bs-det">
+  <div class="bsp"><div class="bsh"></div><div id="det-content"></div></div>
+</div>
+
+<div class="bs" id="bs-hire">
+  <div class="bsp"><div class="bsh"></div><div id="hire-content"></div></div>
+</div>
+
+<script>
+// ===== LOCAL DEMO DATA (Firebase مٹی) =====
+var U = null;
+var regPic = null;
+var srchQ = "";
+var selCat = "all";
+
+var cats = [
+  {id:"1", name:"الیکٹریشن", icon:"⚡"},
+  {id:"2", name:"پلمبر", icon:"🔧"},
+  {id:"3", name:"درزی", icon:"🪡"},
+  {id:"4", name:"راجگیر", icon:"🧱"},
+  {id:"5", name:"پینٹر", icon:"🎨"},
+  {id:"6", name:"بڑھئی", icon:"🔨"},
+  {id:"7", name:"ڈرائیور", icon:"🚗"},
+  {id:"8", name:"باورچی", icon:"🍳"},
+  {id:"9", name:"کمپیوٹر", icon:"💻"},
+  {id:"10", name:"موبائل ریپیئر", icon:"📱"},
+  {id:"11", name:"شہد فروش", icon:"🍯"},
+  {id:"12", name:"زرعی کارکن", icon:"🌾"}
+];
+
+var workers = [
+  {id:"w1", name:"احمد علی", city:"لاہور", catId:"1", title:"تجربہ کار الیکٹریشن 10 سال", rate:"800", rateType:"دن", whatsapp:"03001234567", experience:"10", avgRating:4.5, reviewCount:12, contactCount:34, status:"approved", photo:""},
+  {id:"w2", name:"محمد یوسف", city:"کراچی", catId:"2", title:"پلمبنگ ماہر", rate:"600", rateType:"دن", whatsapp:"03011234567", experience:"7", avgRating:4, reviewCount:8, contactCount:21, status:"approved", photo:""},
+  {id:"w3", name:"عمر فاروق", city:"فیصل آباد", catId:"3", title:"درزی - گارمنٹس", rate:"500", rateType:"کام", whatsapp:"03021234567", experience:"5", avgRating:5, reviewCount:20, contactCount:45, status:"approved", photo:""},
+  {id:"w4", name:"زاہد حسین", city:"رحیم یار خان", catId:"12", title:"زرعی ماہر", rate:"400", rateType:"دن", whatsapp:"03031234567", experience:"15", avgRating:4.8, reviewCount:6, contactCount:12, status:"approved", photo:""},
+  {id:"w5", name:"طارق محمود", city:"ملتان", catId:"9", title:"کمپیوٹر ریپیئر", rate:"300", rateType:"کام", whatsapp:"03041234567", experience:"8", avgRating:4.2, reviewCount:15, contactCount:28, status:"approved", photo:""},
+  {id:"w6", name:"ریاض احمد", city:"پشاور", catId:"5", title:"پینٹنگ ماہر", rate:"700", rateType:"دن", whatsapp:"03051234567", experience:"12", avgRating:4.7, reviewCount:9, contactCount:19, status:"approved", photo:""}
+];
+
+// INIT
+window.onload = function() {
+  setTimeout(function() {
+    document.getElementById("sp").style.display = "none";
+    document.getElementById("tb").classList.add("on");
+    document.getElementById("app").classList.add("on");
+    renderCats();
+    updateRegCat();
+    renderWorkers();
+  }, 1200);
+};
+
+// DEMO LOGIN
+function demoLogin() {
+  U = {uid:"demo123", displayName:"Demo User", email:"demo@test.com", photoURL:""};
+  document.getElementById("auth").classList.remove("on");
+  var btn = document.getElementById("tb").querySelector(".login-btn");
+  btn.textContent = "👤 Demo";
+  toast("✅ Demo لاگ ان ہو گئے");
+  renderProf();
+}
+
+function showAuth() { document.getElementById("auth").classList.add("on"); }
+function closeAuth() { document.getElementById("auth").classList.remove("on"); }
+
+// CATEGORIES
+function renderCats() {
+  var html = '<div class="cc on" onclick="setCat('all',this)">🌟 سب</div>';
+  cats.forEach(function(c) {
+    html += '<div class="cc" onclick="setCat('' + c.id + '',this)">' + c.icon + " " + c.name + "</div>";
+  });
+  document.getElementById("cats-row").innerHTML = html;
+}
+
+function updateRegCat() {
+  var html = "<option value=''>منتخب کریں</option>";
+  cats.forEach(function(c) {
+    html += '<option value="' + c.id + '">' + c.icon + " " + c.name + "</option>";
+  });
+  document.getElementById("r-cat").innerHTML = html;
+}
+
+function setCat(id, el) {
+  selCat = id;
+  document.querySelectorAll(".cc").forEach(function(c) { c.classList.remove("on"); });
+  el.classList.add("on");
+  renderWorkers();
+}
+
+// WORKERS
+function renderWorkers() {
+  var el = document.getElementById("wl");
+  var list = workers.filter(function(w) { return w.status === "approved"; });
+  if (selCat !== "all") list = list.filter(function(w) { return w.catId === selCat; });
+  if (srchQ) {
+    var q = srchQ.toLowerCase();
+    list = list.filter(function(w) {
+      return (w.title||"").toLowerCase().indexOf(q) > -1 || (w.city||"").toLowerCase().indexOf(q) > -1 || (w.name||"").toLowerCase().indexOf(q) > -1;
+    });
+  }
+  if (!list.length) {
+    el.style.display = "block";
+    el.innerHTML = '<div class="empty" style="grid-column:1/-1"><div class="ei">🔍</div><div class="ep">کوئی نتیجہ نہیں</div></div>';
+    return;
+  }
+  el.style.display = "grid";
+  var html = "";
+  list.forEach(function(w, i) {
+    var cat = cats.find(function(c) { return c.id === w.catId; });
+    var stars = "";
+    for (var n = 1; n <= 5; n++) {
+      stars += '<span class="st ' + (n <= Math.round(w.avgRating||0) ? "on" : "off") + '">★</span>';
+    }
+    html += '<div class="wc" onclick="showDet('' + w.id + '')" style="animation-delay:' + (i*0.035) + 's">' +
+      '<div class="wc-t"><div class="wc-av">' + (w.photo ? '<img src="'+w.photo+'">' : "👷") + "</div>" +
+      '<div class="wc-nm">' + w.name + "</div>" +
+      '<div class="wc-cat">' + (cat ? cat.icon + " " + cat.name : "") + "</div>" +
+      '<div class="wc-stars">' + stars + "</div>" +
+      (w.contactCount ? '<div style="font-size:.52rem;color:var(--teal2);margin-top:2px">' + w.contactCount + ' رابطہ</div>' : "") +
+      "</div>" +
+      '<div class="wc-b"><div class="wc-r">Rs.' + w.rate + '<span style="font-size:.55rem;color:var(--t3)"> /' + w.rateType + "</span></div>" +
+      '<div class="wc-city">📍' + w.city + "</div></div></div>";
+  });
+  el.innerHTML = html;
+}
+
+function doSearch() { srchQ = document.getElementById("sq").value.trim(); renderWorkers(); }
+
+// DETAIL
+function showDet(id) {
+  var w = workers.find(function(x) { return x.id === id; });
+  if (!w) return;
+  var cat = cats.find(function(c) { return c.id === w.catId; });
+  var stars = "";
+  for (var n = 1; n <= 5; n++) {
+    stars += '<span class="st ' + (n <= Math.round(w.avgRating||0) ? "on" : "off") + '">★</span>';
+  }
+  var html = '<div class="wd-hd">' +
+    '<div class="wd-av">' + (w.photo ? '<img src="'+w.photo+'">' : "👷") + "</div>" +
+    '<div class="wd-nm">' + w.name + "</div>" +
+    '<div style="font-size:.72rem;color:var(--teal2);margin-bottom:3px">' + (cat ? cat.icon + " " + cat.name : "") + "</div>" +
+    '<div style="display:flex;justify-content:center;gap:2px;margin:4px 0">' + stars + "</div>" +
+    '<div style="font-size:.65rem;color:var(--t3)">' + (w.reviewCount||0) + " تجربات • 📍" + w.city + "</div>" +
+    '<div style="font-size:.92rem;color:var(--gold2);font-weight:700;margin-top:6px">Rs.' + w.rate + ' <span style="font-size:.68rem;color:var(--t3)">فی ' + w.rateType + "</span></div>" +
+    (w.contactCount ? '<div style="font-size:.64rem;color:var(--teal2);background:var(--tb);border:1px solid var(--bdr2);border-radius:8px;padding:2px 9px;margin-top:4px;display:inline-block">' + w.contactCount + " لوگوں نے رابطہ کیا</div>" : "") +
+    "</div>";
+  var rows = [
+    ["💼","مہارت",w.title||""],
+    ["⏱️","تجربہ",(w.experience||"0")+" سال"],
+    ["📍","شہر",w.city||""],
+    ["📱","WhatsApp",w.whatsapp||""]
+  ];
+  rows.forEach(function(r) {
+    if (r[2]) html += '<div class="wi"><div class="wi-k">' + r[0] + " " + r[1] + '</div><div class="wi-v">' + r[2] + "</div></div>";
+  });
+  html += '<div class="row" style="margin-top:12px">';
+  if (w.whatsapp) html += '<button class="btn bg" onclick="waW('' + w.whatsapp + '','' + w.name + '')">📲 WhatsApp</button>';
+  html += '<button class="btn bt" style="flex:1;justify-content:center" onclick="openHire('' + id + '')">💬 رابطہ کریں</button>';
+  html += "</div>";
+  document.getElementById("det-content").innerHTML = html;
+  openBS("bs-det");
+}
+
+function waW(phone, name) {
+  var c = phone.replace(/[^0-9]/g, "");
+  var intl = c.charAt(0) === "0" ? "92" + c.slice(1) : c;
+  window.open("https://wa.me/" + intl + "?text=" + encodeURIComponent("السلام علیکم " + name + "! پہچان ایپ سے رابطہ۔"), "_blank");
+}
+
+function openHire(wid) {
+  if (!U) { closeBS("bs-det"); showAuth(); return; }
+  var w = workers.find(function(x) { return x.id === wid; });
+  if (!w) return;
+  closeBS("bs-det");
+  var cat = cats.find(function(c) { return c.id === w.catId; });
+  document.getElementById("hire-content").innerHTML =
+    '<div class="bs-t">💬 ' + w.name + " سے رابطہ</div>" +
+    '<div style="background:var(--grb);border:1px solid rgba(34,197,94,.2);border-radius:9px;padding:10px;margin-bottom:12px">' +
+    '<div style="font-family:'Noto Nastaliq Urdu',serif;font-size:.78rem;color:var(--gr);line-height:1.9">' +
+    "✅ WhatsApp پر براہ راست بات کریں<br>⚡ قیمت اور کام خود طے کریں<br>📊 یہ رابطہ ریکارڈ ہو گا</div></div>" +
+    '<div class="fld"><label class="lbl">کام کی تفصیل (اختیاری)</label>' +
+    '<textarea class="inp" id="h-desc" rows="2" placeholder="مثلاً: گھر میں وائرنگ..."></textarea></div>' +
+    '<div class="row">' +
+    '<button class="btn bg" onclick="submitContact('' + wid + '')" style="flex:1;justify-content:center;font-family:'Noto Nastaliq Urdu',serif;font-size:.9rem">📲 WhatsApp پر رابطہ کریں</button>' +
+    '<button class="btn bo" onclick="closeBS('bs-hire')">✕</button></div>';
+  openBS("bs-hire");
+}
+
+function submitContact(wid) {
+  var w = workers.find(function(x) { return x.id === wid; });
+  if (!w) return;
+  w.contactCount = (w.contactCount || 0) + 1;
+  if (w.whatsapp) {
+    var c = w.whatsapp.replace(/[^0-9]/g, "");
+    var intl = c.charAt(0) === "0" ? "92" + c.slice(1) : c;
+    var desc = document.getElementById("h-desc") ? document.getElementById("h-desc").value.trim() : "";
+    var msg = "السلام علیکم " + w.name + "! پہچان ایپ سے رابطہ۔" + (desc ? "
+کام: " + desc : "");
+    window.open("https://wa.me/" + intl + "?text=" + encodeURIComponent(msg), "_blank");
+  }
+  closeBS("bs-hire");
+  toast("✅ WhatsApp کھل گیا!");
+}
+
+// REGISTER
+function prevPic(inp) {
+  var f = inp.files[0];
+  if (!f) return;
+  var r = new FileReader();
+  r.onload = function(e) {
+    regPic = e.target.result;
+    document.getElementById("pp").innerHTML = '<img src="' + regPic + '">';
+  };
+  r.readAsDataURL(f);
+}
+
+function openWorkerReg() {
+  if (!U) { showAuth(); return; }
+  document.getElementById("reg-title").textContent = "ہنرمند رجسٹریشن";
+  openBS("bs-reg");
+}
+
+function saveReg() {
+  var name = document.getElementById("r-name").value.trim();
+  var wa = document.getElementById("r-wa").value.trim();
+  var city = document.getElementById("r-city").value.trim();
+  var catId = document.getElementById("r-cat").value;
+  var title = document.getElementById("r-title").value.trim();
+  var rate = document.getElementById("r-rate").value;
+  if (!name || !wa || !city || !catId || !title || !rate) {
+    toast("تمام * fields بھریں", "❌"); return;
+  }
+  var newW = {
+    id: "w" + Date.now(), name: name, city: city, catId: catId, title: title,
+    rate: rate, rateType: document.getElementById("r-rtype").value,
+    whatsapp: wa, experience: document.getElementById("r-exp").value || "0",
+    bio: document.getElementById("r-bio").value.trim(),
+    photo: regPic || "", status: "approved",
+    avgRating: 0, reviewCount: 0, contactCount: 0
+  };
+  workers.unshift(newW);
+  closeBS("bs-reg");
+  toast("✅ رجسٹریشن مکمل!");
+  renderWorkers();
+  go(0);
+}
+
+// PROFILE
+function renderProf() {
+  if (!U) {
+    document.getElementById("prof-content").innerHTML =
+      '<div class="empty"><div class="ei">🔑</div><div class="ep">لاگ ان کریں</div></div>';
+    return;
+  }
+  document.getElementById("prof-content").innerHTML =
+    '<div class="ph">' +
+    '<div style="width:74px;height:74px;border-radius:50%;margin:0 auto 10px;border:2.5px solid var(--bdr2);background:var(--c3);display:flex;align-items:center;justify-content:center;font-size:2rem">👤</div>' +
+    '<div class="ph-nm">' + (U.displayName||"Demo User") + "</div>" +
+    '<div style="font-size:.68rem;color:var(--t3)">' + (U.email||"") + "</div>" +
+    '<div style="background:var(--grb);border:1px solid rgba(34,197,94,.25);border-radius:8px;padding:7px 11px;font-size:.7rem;font-family:'Noto Nastaliq Urdu',serif;color:var(--gr);margin:8px 0">✅ Demo Mode — Firebase بند ہے</div>' +
+    '<div style="display:flex;gap:7px;margin-top:10px;justify-content:center">' +
+    '<button class="btn bt" onclick="openWorkerReg()" style="font-family:'Noto Nastaliq Urdu',serif">🛠️ ہنرمند بنیں</button>' +
+    '<button class="btn br2" onclick="U=null;renderProf();toast('لاگ آؤٹ')">🚪</button></div></div>' +
+    '<div class="sc"><div class="sc-h">ℹ️ Demo Mode</div>' +
+    '<div style="font-family:'Noto Nastaliq Urdu',serif;font-size:.78rem;color:var(--t3);line-height:1.9">' +
+    "Firebase deploy ہونے پر Google login کام کرے گا۔<br>ابھی demo data سے چیک کریں۔</div></div>";
+}
+
+// NAV
+function go(i) {
+  document.querySelectorAll(".nt").forEach(function(t, j) { t.classList.toggle("on", i===j); });
+  document.querySelectorAll(".scr").forEach(function(s, j) {
+    s.classList.toggle("on", i===j);
+    s.style.display = i===j ? "flex" : "none";
+  });
+  if (i===1) renderProf();
+}
+
+function openBS(id) { document.getElementById(id).classList.add("on"); }
+function closeBS(id) { document.getElementById(id).classList.remove("on"); }
+
+document.querySelectorAll(".bs").forEach(function(bs) {
+  bs.addEventListener("click", function(e) {
+    if (e.target === bs) bs.classList.remove("on");
+  });
+});
+
+function toast(msg, ico) {
+  ico = ico || "✅";
+  var ex = document.querySelector(".toast");
+  if (ex) ex.remove();
+  var t = document.createElement("div");
+  t.className = "toast";
+  t.innerHTML = "<span>" + ico + "</span><span>" + msg + "</span>";
+  document.body.appendChild(t);
+  setTimeout(function() {
+    t.style.opacity = "0";
+    t.style.transition = "opacity .3s";
+    setTimeout(function() { if (t.parentNode) t.remove(); }, 320);
+  }, 2700);
+}
+</script>
+</body>
+</html>
